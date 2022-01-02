@@ -1,11 +1,13 @@
 package lectura.binario;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import javax.swing.JOptionPane;
 
 /**
@@ -40,8 +42,9 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabelTextoFichero = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButtonLecturaFichero = new javax.swing.JButton();
+        jButtonLecturaBinario = new javax.swing.JButton();
         jButtonSalir = new javax.swing.JButton();
+        jButtonLecturaTexto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -104,10 +107,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButtonLecturaFichero.setText("Leer datos del fichero");
-        jButtonLecturaFichero.addActionListener(new java.awt.event.ActionListener() {
+        jButtonLecturaBinario.setText("Leer datos del fichero binario");
+        jButtonLecturaBinario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLecturaFicheroActionPerformed(evt);
+                jButtonLecturaBinarioActionPerformed(evt);
             }
         });
 
@@ -118,12 +121,21 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonLecturaTexto.setText("Leer datos del fichero de texto");
+        jButtonLecturaTexto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLecturaTextoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jButtonLecturaFichero)
+                .addComponent(jButtonLecturaBinario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonLecturaTexto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSalir)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -133,8 +145,9 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonLecturaFichero)
-                    .addComponent(jButtonSalir))
+                    .addComponent(jButtonLecturaBinario)
+                    .addComponent(jButtonSalir)
+                    .addComponent(jButtonLecturaTexto))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
@@ -170,7 +183,7 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonLecturaFicheroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLecturaFicheroActionPerformed
+    private void jButtonLecturaBinarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLecturaBinarioActionPerformed
         // Nombre del fichero donde se leerá la información
         String fileName =  "./resources/datosbinarios.dat" ;
         StringBuffer buffer = new StringBuffer();
@@ -184,19 +197,52 @@ public class MainFrame extends javax.swing.JFrame {
             }
             
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error 1", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (EOFException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error 2", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error 3", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally  {
             this.jLabelTextoFichero.setText(buffer.toString());
         }
-    }//GEN-LAST:event_jButtonLecturaFicheroActionPerformed
+    }//GEN-LAST:event_jButtonLecturaBinarioActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButtonSalirActionPerformed
+
+    private void jButtonLecturaTextoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLecturaTextoActionPerformed
+        // Nombre del fichero donde se escribirá la información
+        String fileName = "./resources/datostexto.txt";
+        
+        // Clases para poder acceder al fichero de texto
+        File file = new File(fileName);
+        FileReader fr = null;
+        BufferedReader br = null;
+        StringBuilder texto = new StringBuilder();
+        
+        try {
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
+            String linea;
+            
+            while ((linea = br.readLine()) != null) {
+                texto.append(linea);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (fr != null) {
+                    fr.close();
+                }
+                this.jLabelTextoFichero.setText(texto.toString());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);  
+            }
+        }
+    }//GEN-LAST:event_jButtonLecturaTextoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -234,7 +280,8 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonLecturaFichero;
+    private javax.swing.JButton jButtonLecturaBinario;
+    private javax.swing.JButton jButtonLecturaTexto;
     private javax.swing.JButton jButtonSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

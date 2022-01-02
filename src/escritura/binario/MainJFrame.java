@@ -2,7 +2,9 @@ package escritura.binario;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.swing.JOptionPane;
 
 /**
@@ -35,8 +37,9 @@ public class MainJFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextFichero = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
-        jButtonEscribirFichero = new javax.swing.JButton();
+        jButtonEscribirBinario = new javax.swing.JButton();
         jButtonSalir = new javax.swing.JButton();
+        jButtonEscribirTexto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Escribir a fichero...");
@@ -93,10 +96,10 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButtonEscribirFichero.setText("Enviar al fichero");
-        jButtonEscribirFichero.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEscribirBinario.setText("Enviar al fichero");
+        jButtonEscribirBinario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEscribirFicheroActionPerformed(evt);
+                jButtonEscribirBinarioActionPerformed(evt);
             }
         });
 
@@ -107,14 +110,23 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonEscribirTexto.setText("Enviar al fichero");
+        jButtonEscribirTexto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEscribirTextoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButtonEscribirFichero)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonEscribirBinario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonEscribirTexto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -123,8 +135,9 @@ public class MainJFrame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonEscribirFichero)
-                    .addComponent(jButtonSalir))
+                    .addComponent(jButtonEscribirBinario)
+                    .addComponent(jButtonSalir)
+                    .addComponent(jButtonEscribirTexto))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -156,7 +169,7 @@ public class MainJFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonEscribirFicheroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEscribirFicheroActionPerformed
+    private void jButtonEscribirBinarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEscribirBinarioActionPerformed
         // Nombre del fichero donde se escribirá la información
         String fileName =  "./resources/datosbinarios.dat" ;
         try {
@@ -168,17 +181,49 @@ public class MainJFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Añade un texto para serializar", "Error", JOptionPane.ERROR);
             } else {
                 fileOut.writeUTF(jTextFichero.getText());
-                JOptionPane.showMessageDialog(this, "Texto guardado correctamente el el fichero binario.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Texto guardado correctamente en el fichero binario.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
                 fileOut.close();
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButtonEscribirFicheroActionPerformed
+    }//GEN-LAST:event_jButtonEscribirBinarioActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButtonSalirActionPerformed
+
+    private void jButtonEscribirTextoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEscribirTextoActionPerformed
+        // Nombre del fichero donde se escribirá la información
+        String fileName = "./resources/datostexto.txt";
+        // Clases para trabajar con ficheros
+        FileWriter file = null;
+        PrintWriter pw = null;
+        
+        // Captura de excepciones
+        try {
+            // Iniciamos los objetos para tratar los ficheros
+            file = new FileWriter(fileName);
+            pw = new PrintWriter(file);
+            
+            // Escribrimos en el fichero el contenido de la caja de texto
+            pw.printf(this.jTextFichero.getText());
+            
+            // Mostramos por pantalla la confirmación
+            JOptionPane.showMessageDialog(this, "Texto guardado correctamente en el fichero de texto.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Se cierra el fichero
+            try {
+                if (file != null) {
+                    file.close();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButtonEscribirTextoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -216,7 +261,8 @@ public class MainJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonEscribirFichero;
+    private javax.swing.JButton jButtonEscribirBinario;
+    private javax.swing.JButton jButtonEscribirTexto;
     private javax.swing.JButton jButtonSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
