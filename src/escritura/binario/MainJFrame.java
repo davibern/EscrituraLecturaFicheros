@@ -167,10 +167,15 @@ public class MainJFrame extends javax.swing.JFrame {
             DataOutputStream fileOut = new
             DataOutputStream (new FileOutputStream(fileName));
             // Escribir cadena de texto
-            fileOut.writeUTF(jTextFichero.getText());
-            JOptionPane.showMessageDialog(this, "Texto guardado correctamente el el fichero binario.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+            if (jTextFichero.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "Añade un texto para serializar", "Error", JOptionPane.ERROR);
+            } else {
+                fileOut.writeUTF(jTextFichero.getText());
+                JOptionPane.showMessageDialog(this, "Texto guardado correctamente el el fichero binario.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+                fileOut.close();
+            }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR);;
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR);
         }
     }//GEN-LAST:event_jButtonEscribirFicheroActionPerformed
 
